@@ -18,14 +18,7 @@ var CHALLENGE = 3;
 //The board is arrayed X,Y - but the elements are
 //	indexed with Y,X, so keep that in mind
 var board = new Array(10);
-for(var i = 0; i < 10; i++)
-{
-	board[i] = new Array(9);
-	for(var j = 0; j < 9; j++)
-	{
-		board[i][j] = BLANK;
-	}
-}
+resetGame();
 
 /* Assign background colors and other css elements to each
 game element based on theme */
@@ -497,5 +490,21 @@ function getAIMove(color)
 				sandbox[i][j] = board[i][j];
 			}
 		}
+	}
+	
+	function resetGame()
+	{
+		board = new Array(10);
+		for(var i = 0; i < 10; i++)
+		{
+			board[i] = new Array(9);
+			for(var j = 0; j < 9; j++)
+			{
+				board[i][j] = BLANK;
+			}
+		}
+		isGameOver = false;
+		document.getElementById("btntbl").innerHTML = '<tr><td id="col0" onclick="handleClick(0);"></td><td id="col1" onclick="handleClick(1);"></td><td id="col2" onclick="handleClick(2);"></td><td id="col3" onclick="handleClick(3);"></td><td id="col4" onclick="handleClick(4);"></td><td id="col5" onclick="handleClick(5);"></td><td id="col6" onclick="handleClick(6);"></td><td id="col7" onclick="handleClick(7);"></td></tr>'
+		setupBlueTurn();
 	}
 }
