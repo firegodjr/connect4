@@ -499,20 +499,20 @@ function getAIMove(color)
 			}
 		}
 	}
-	
-	function resetGame()
+}
+
+function resetGame()
+{
+	board = new Array(10);
+	for(var i = 0; i < 10; i++)
 	{
-		board = new Array(10);
-		for(var i = 0; i < 10; i++)
+		board[i] = new Array(9);
+		for(var j = 0; j < 9; j++)
 		{
-			board[i] = new Array(9);
-			for(var j = 0; j < 9; j++)
-			{
-				board[i][j] = BLANK;
-			}
+			board[i][j] = BLANK;
 		}
-		isGameOver = false;
-		document.getElementById("btntbl").innerHTML = '<tr><td id="col0" onclick="handleClick(0);"></td><td id="col1" onclick="handleClick(1);"></td><td id="col2" onclick="handleClick(2);"></td><td id="col3" onclick="handleClick(3);"></td><td id="col4" onclick="handleClick(4);"></td><td id="col5" onclick="handleClick(5);"></td><td id="col6" onclick="handleClick(6);"></td><td id="col7" onclick="handleClick(7);"></td></tr>'
-		setupBlueTurn();
 	}
+	isGameOver = false;
+	document.getElementById("btntbl").innerHTML = '<tr><td id="col0" onclick="handleClick(0);"></td><td id="col1" onclick="handleClick(1);"></td><td id="col2" onclick="handleClick(2);"></td><td id="col3" onclick="handleClick(3);"></td><td id="col4" onclick="handleClick(4);"></td><td id="col5" onclick="handleClick(5);"></td><td id="col6" onclick="handleClick(6);"></td><td id="col7" onclick="handleClick(7);"></td></tr>'
+	setupBlueTurn();
 }
