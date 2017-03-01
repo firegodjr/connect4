@@ -243,7 +243,7 @@
 				font-size: 5vw;
 			}
 			
-			#config #themebtn
+			#config [type*=button]
 			{
 				width: 30vw;
 				height: 10vw;
@@ -361,7 +361,8 @@
 	</table>
 	<br />
 	<div id="config">
-		<input type="button" id="themebtn" value="Themes" onClick='changeThemeByNumber(prompt("Please choose a theme by entering a number.\n0: Classic\n1: DOGE\n2: Christmas\n3: Challenge (TRYHARDS ONLY)"))'/><br /><br />
+		<input type="button" id="themebtn" value="Themes" onClick='changeThemeByNumber(prompt("Please choose a theme by entering a number.\n0: Classic\n1: DOGE\n2: Christmas\n3: Challenge (TRYHARDS ONLY)"))'/>
+		<input type="button" id="resetbtn" value="Reset Game" onClick="resetGame()"><br /><br />
 		Use Blue AI: <input type="checkbox" onclick="useBlueAI = this.checked"/><br />
 		Use Red AI: <input type="checkbox" onclick="useRedAI = this.checked"/><br />
 		AI Aggressiveness: <input type="number" id="aivalue" value="3" onchange="aiAggressiveness = this.value"><br />
