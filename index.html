@@ -226,6 +226,10 @@
 				border: 0.5vw solid black;
 				border-radius: 10vw;
 			}
+			#btntbl td
+			{
+				font-size: 10vw;
+			}
 			#btntbl td img
 			{
 				width: 10vw;
@@ -257,6 +261,12 @@
 				width: 15vw;
 				height: 5vw;
 				font-size: 5vw;
+			}
+			
+			#config #aiout
+			{
+				font-size: 3vw;
+				color: darkgray;
 			}
 			
 			input#aivalue
@@ -354,9 +364,9 @@
 		<input type="button" id="themebtn" value="Themes" onClick='changeThemeByNumber(prompt("Please choose a theme by entering a number.\n0: Classic\n1: DOGE\n2: Christmas\n3: Challenge (TRYHARDS ONLY)"))'/><br /><br />
 		Use Blue AI: <input type="checkbox" onclick="useBlueAI = this.checked"/><br />
 		Use Red AI: <input type="checkbox" onclick="useRedAI = this.checked"/><br />
-		AI Aggressiveness: <input type="number" id="aivalue" value="3" onchange="aiAggressiveness = this.value">
+		AI Aggressiveness: <input type="number" id="aivalue" value="3" onchange="aiAggressiveness = this.value"><br />
+		<p id="aiout"></p>
 	</div>
-	<p id="aiout"></p>
 	<script>
 		if(parseInt(Math.random() > 0.5))
 		{
