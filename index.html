@@ -50,7 +50,6 @@
 		
 		#gametbl td
 		{
-			position: relative;
 			border: 1px solid black;
 			border-radius: 50px;
 			background-color: transparent;
@@ -105,7 +104,6 @@
 			{
 				transform: translateY(-100px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -113,7 +111,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -124,7 +121,6 @@
 			{
 				transform: translateY(-150px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -132,7 +128,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -143,7 +138,6 @@
 			{
 				transform: translateY(-200px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -151,7 +145,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -162,7 +155,6 @@
 			{
 				transform: translateY(-250px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -170,7 +162,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -181,7 +172,6 @@
 			{
 				transform: translateY(-300px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -189,7 +179,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -200,7 +189,6 @@
 			{
 				transform: translateY(-350px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -208,7 +196,6 @@
 			{
 				transform: translateY(0px);
 				position: relative;
-				border: 1px solid black;
 				border-radius: 50px;
 				background-position: center;
 			}
@@ -231,6 +218,13 @@
 			#gametbl
 			{
 				height: 70vw;
+				border: 0.5vw solid black;
+				border-spacing: 0.8vw;
+			}
+			#gametbl td
+			{
+				border: 0.5vw solid black;
+				border-radius: 10vw;
 			}
 			#btntbl td img
 			{
@@ -240,9 +234,29 @@
 			
 			#config
 			{
-				width: 300px;
+				width: 100%;
 				text-align: center;
-				line-height: 30px;
+				font-size: 5vw;
+			}
+			
+			#config #themebtn
+			{
+				width: 30vw;
+				height: 10vw;
+				font-size: 5vw;
+			}
+			
+			#config [type*=checkbox]
+			{
+				width: 5vw;
+				height: 5vw;
+			}
+			
+			#config #aivalue
+			{
+				width: 15vw;
+				height: 5vw;
+				font-size: 5vw;
 			}
 			
 			input#aivalue

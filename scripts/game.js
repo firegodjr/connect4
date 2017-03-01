@@ -36,7 +36,6 @@ function renderBoard()
 	{
 		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
-		table.style.border = "2px solid black";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "";
 		table.style.animation = "none";
@@ -45,7 +44,6 @@ function renderBoard()
 	{
 		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
-		table.style.border = "2px solid black";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "";
 		table.style.animation = "none";
@@ -54,7 +52,6 @@ function renderBoard()
 	{
 		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
-		table.style.border = "2px solid black";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "url('pics/bgxmas.jpg')";
 		table.style.animation = "none";
