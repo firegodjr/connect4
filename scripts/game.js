@@ -18,7 +18,14 @@ var CHALLENGE = 3;
 //The board is arrayed X,Y - but the elements are
 //	indexed with Y,X, so keep that in mind
 var board = new Array(10);
-resetGame();
+for(var i = 0; i < 10; i++)
+{
+	board[i] = new Array(9);
+	for(var j = 0; j < 9; j++)
+	{
+		board[i][j] = BLANK;
+	}
+}
 
 /* Assign background colors and other css elements to each
 game element based on theme */
