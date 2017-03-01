@@ -17,6 +17,7 @@ var CHALLENGE = 3;
 
 //The board is arrayed X,Y - but the elements are
 //	indexed with Y,X, so keep that in mind
+//Also don't use resetGame() here or it'll break
 var board = new Array(10);
 for(var i = 0; i < 10; i++)
 {
