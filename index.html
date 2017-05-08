@@ -10,7 +10,7 @@
 	<title>Connect 4!</title>
 	<script src="scripts/game.js"></script>
 	<style>
-	
+
 		@keyframes slowspin
 		{
 			0%{
@@ -27,14 +27,14 @@
 				transform: rotateY(360deg);
 			}
 		}
-		
+
 		body
 		{
 			padding: 50px;
 			-webkit-perspective: 600px;
 			perspective: 600px;
 		}
-		
+
 		#gametbl
 		{
 			height: 300px;
@@ -47,7 +47,7 @@
 			border: 2px solid black;
 			border-radius: 50px;
 		}
-		
+
 		#gametbl td
 		{
 			border: 1px solid black;
@@ -55,26 +55,26 @@
 			background-color: transparent;
 			background-position: center;
 		}
-		
+
 		#btntbl
 		{
 			width: 350px;
 			padding: 10px;
 		}
-		
+
 		#btntbl td
 		{
 			font-size: 40px;
 			font-family: 'comic sans ms';
 		}
-		
+
 		#btntbl td img
 		{
 			transition: all 0.2s, transform 0.1s;
 			width: 43px;
 			height: 43px;
 		}
-		
+
 		#btntbl td:hover img
 		{
 			-webkit-transform: scale(1.3);
@@ -83,7 +83,7 @@
 			-ms-transform: scale(1.3);
 			transform: scale(1.3);
 		}
-		
+
 		#btntbl td img:active
 		{
 			-webkit-transform: scale(0.9);
@@ -92,12 +92,12 @@
 			-ms-transform: scale(0.9);
 			transform: scale(0.9);
 		}
-		
+
 		*
 		{
 			transition: all 0.2s;
 		}
-		
+
 		@keyframes fall0
 		{
 			0%
@@ -200,7 +200,7 @@
 				background-position: center;
 			}
 		}
-		
+
 		@media (max-width: 700px), only screen and (min-resolution: 117dpi) and (max-resolution: 119dpi), only screen and (min-resolution: 131dpi) and (max-resolution: 133dpi), only screen and (min-resolution: 145dpi) and (max-resolution: 154dpi), only screen and (min-resolution: 162dpi) and (max-resolution: 164dpi), only screen and (min-resolution: 169dpi)
 		{
 			html
@@ -235,40 +235,40 @@
 				width: 10vw;
 				height: 10vw;
 			}
-			
+
 			#config
 			{
 				width: 100%;
 				text-align: center;
 				font-size: 5vw;
 			}
-			
+
 			#config [type*=button]
 			{
 				width: 30vw;
 				height: 10vw;
 				font-size: 5vw;
 			}
-			
+
 			#config [type*=checkbox]
 			{
 				width: 5vw;
 				height: 5vw;
 			}
-			
+
 			#config #aivalue
 			{
 				width: 15vw;
 				height: 5vw;
 				font-size: 5vw;
 			}
-			
+
 			#config #aiout
 			{
 				font-size: 3vw;
 				color: darkgray;
 			}
-			
+
 			input#aivalue
 			{
 				width: 30px;
@@ -294,7 +294,7 @@
 		I was stupid and organized the elements
 		by Y,X instead of X,Y. This makes the
 		code confusing. :(
-		
+
 		Ex:
 		  0 1 2 3 4 5 6
 		0[][][][][][][]
@@ -365,7 +365,7 @@
 		<input type="button" id="resetbtn" value="Reset Game" onClick="resetGame()"><br /><br />
 		Use Blue AI: <input type="checkbox" onclick="useBlueAI = this.checked"/><br />
 		Use Red AI: <input type="checkbox" onclick="useRedAI = this.checked"/><br />
-		AI Aggressiveness: <input type="number" id="aivalue" value="3" onchange="aiAggressiveness = this.value"><br />
+		AI Intelligence: <input type="number" id="aivalue" value="5" onchange="aiDepth = this.value-1"><br />
 		<p id="aiout"></p>
 	</div>
 	<script>

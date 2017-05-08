@@ -1,9 +1,11 @@
+var debug = false;
+
 var isGameOver = false;
 var isBlueTurn = false;
 var isRedTurn = false;
 var useBlueAI = false;
 var useRedAI = false;
-var aiAggressiveness = 1;  //Anything above 1 causes the AI to become more aggressive in blocking the other player's winning move and completing its own four-in-a-row, but subsequently becomes less interested in strategy as it doesn't care as much when it finds a winning move that isn't immediately accessible
+var aiDepth = 4;  //Sets AI iteration depth
 var BLANK = 0;
 var BLUE = 1;
 var RED = 2;
@@ -30,12 +32,12 @@ for(var i = 0; i < 10; i++)
 
 /* Assign background colors and other css elements to each
 game element based on theme */
-function renderBoard()
+function renderBoard(board)
 {
+	var table = document.getElementById("gametbl");
 	//Theme the board
 	if(theme == NORMAL)
 	{
-		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "";
@@ -43,7 +45,6 @@ function renderBoard()
 	}
 	else if(theme == DOGE)
 	{
-		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "";
@@ -51,7 +52,6 @@ function renderBoard()
 	}
 	else if(theme == CHRISTMAS)
 	{
-		var table = document.getElementById("gametbl");
 		table.style.backgroundColor = "yellow";
 		table.style.borderRadius = "5px";
 		table.style.backgroundImage = "url('pics/bgxmas.jpg')";
@@ -59,19 +59,18 @@ function renderBoard()
 	}
 	else if(theme == CHALLENGE)
 	{
-		var table = document.getElementById("gametbl");
 		table.style.animation = "slowspin 2s infinite";
 	}
-	
+
 	//Theme the coins
 	for(var i = 0; i < 6; i++) //For each row
 	{
 		for(var j = 0; j < 7; j++) //For each column
 		{
 			var el = document.getElementById(i + "," + j);
-			
+
 			el.style.backgroundColor = getClr(board[j][i]);
-			
+
 			if(theme == NORMAL)
 			{
 				el.style.backgroundColor = getClr(board[j][i]);
@@ -109,7 +108,7 @@ function renderBoard()
 			}
 		}
 	}
-		
+
 }
 
 /* Takes an int argument and returns the string of the color's name */
@@ -140,7 +139,7 @@ function handleClick(col)
 			document.getElementById((row+1) + "," + col).style.backgroundColor = getClr(BLUE);
 			document.getElementById((row+1) + "," + col).style.animation = "fall" + row + " 1s";
 			isBlueTurn = false;
-			renderBoard();
+			renderBoard(board);
 			declareWinner(checkForWin(board)[0]);
 			if(useRedAI) document.getElementById("aiout").innerHTML = "The AI is thinking...";
 			setTimeout(setupRedTurn, 100);
@@ -154,7 +153,7 @@ function handleClick(col)
 			document.getElementById((row+1) + "," + col).style.backgroundColor = getClr(RED);
 			document.getElementById((row+1) + "," + col).style.animation = "fall" + row + " 1s";
 			isRedTurn = false;
-			renderBoard();
+			renderBoard(board);
 			declareWinner(checkForWin(board)[0]);
 			if(useBlueAI) document.getElementById("aiout").innerHTML = "The AI is thinking...";
 			setTimeout(setupBlueTurn, 100);
@@ -192,7 +191,7 @@ function getHighestCoin(sandbox, col)
 function tryAddCoin(sandbox, player, col)
 {
 	var row = getNextOpenSlot(sandbox, col);
-	
+
 	if(row != -1)
 	{
 		sandbox[col][row] = player;
@@ -208,7 +207,7 @@ function tryAddCoin(sandbox, player, col)
 function removeCoin(sandbox, col)
 {
 	var row = getHighestCoin(sandbox, col);
-	
+
 	if(row != -1)
 	{
 		sandbox[col][row] = BLANK;
@@ -231,7 +230,7 @@ function setupBlueTurn()
 	{
 		var el = document.getElementById("btntbl");
 	}
-	
+
 	isBlueTurn = true;
 	if(useBlueAI)
 	{
@@ -240,7 +239,7 @@ function setupBlueTurn()
 	}
 	else
 	{
-		renderBoard();
+		renderBoard(board);
 	}
 }
 
@@ -260,7 +259,7 @@ function setupRedTurn()
 	{
 		var el = document.getElementById("btntbl");
 	}
-	
+
 	isRedTurn = true;
 	if(useRedAI)
 	{
@@ -269,7 +268,7 @@ function setupRedTurn()
 	}
 	else
 	{
-		renderBoard();
+		renderBoard(board);
 	}
 }
 
@@ -283,16 +282,16 @@ function checkForWin(sandbox)
 		{
 			//Check vertical win
 			if(sandbox[i][j] != BLANK
-				&& sandbox[i][j]==sandbox[i][j+1] 
-				&& sandbox[i][j]==sandbox[i][j+2] 
+				&& sandbox[i][j]==sandbox[i][j+1]
+				&& sandbox[i][j]==sandbox[i][j+2]
 				&& sandbox[i][j]==sandbox[i][j+3])
 			{
 				winner.push(sandbox[i][j]);
 			}
 			//Check horizontal win
 			else if(sandbox[i][j] != BLANK
-				&& sandbox[i][j]==sandbox[i+1][j] 
-				&& sandbox[i][j]==sandbox[i+2][j] 
+				&& sandbox[i][j]==sandbox[i+1][j]
+				&& sandbox[i][j]==sandbox[i+2][j]
 				&& sandbox[i][j]==sandbox[i+3][j])
 			{
 				winner.push(sandbox[i][j]);
@@ -328,7 +327,7 @@ function declareWinner(team)
 	if(team != BLANK)
 	{
 		//TODO: pulse winner
-		
+
 		//Show header
 		var el = document.getElementById("btntbl");
 		if(team == BLUE)
@@ -346,7 +345,7 @@ function declareWinner(team)
 			el.innerHTML = "<tr><td>GAME OVER</td></tr>";
 			isGameOver = true;
 		}
-	}	
+	}
 }
 
 /* Simply checks if the input is a number and then sets the theme to said number. */
@@ -356,7 +355,7 @@ function changeThemeByNumber(num)
 	{
 		theme = num;
 	}
-	renderBoard();
+	renderBoard(board);
 }
 
 function getOtherColor(color)
@@ -364,6 +363,38 @@ function getOtherColor(color)
 	if(color == RED)
 		return BLUE;
 	else return RED;
+}
+
+function analyzeNextPotentialMove(rootindex, loopamnt, depth, sandbox, basecolor, color, totalIterations)
+{
+		var winner = checkForWin(sandbox);
+		if(winner[0] == basecolor)						//If it can win in one move, prioritize it
+		{ //Just add the score as if it checked every time
+			moveScores[rootindex] += Math.pow(loopamnt, depth);
+			return;
+		}
+		else if(winner[0] == getOtherColor(basecolor))
+		{
+			moveScores[rootindex] -= Math.pow(loopamnt, depth);
+			return;
+		}
+
+	if(depth > 0)
+	{
+		for(var i = 0; i < loopamnt; ++i)
+		{
+			if(tryAddCoin(sandbox, getOtherColor(color), i))
+			{
+				if(debug) renderBoard(sandbox);
+				analyzeNextPotentialMove(rootindex, loopamnt, depth-1, sandbox, basecolor, getOtherColor(color), totalIterations);
+				removeCoin(sandbox, i);
+			}
+		}
+	}
+	else
+	{
+		++totalIterations;
+	}
 }
 
 //Performs a minimax function to get the move with the minimum amount of losses
@@ -378,80 +409,20 @@ function getAIMove(color)
 		{
 			moveScores[i] = 0;
 		}
-		
+
 		resetSandbox(sandbox);
-		
+
 		var totalIterations = 0;
 		for(var i = 0; i < 7; i++)
 		{
-			if(tryAddCoin(sandbox, color, i)) 
+			if(tryAddCoin(sandbox, color, i))
 			{
-				var winner = checkForWin(sandbox);
-				if(winner[0] == color)						//If it can win in one move, prioritize it
-				{
-						moveScores[i] += 2401*aiAggressiveness;
-				}
-				else for(var j = 0; j < 7; j++)
-				{
-					if(tryAddCoin(sandbox, getOtherColor(color), j))
-					{
-						var winner = checkForWin(sandbox);
-						if(winner[0] == getOtherColor(color))	//If the other player can win in one move, prioritize it
-						{
-								moveScores[i] -= 343*aiAggressiveness;
-						}
-						else for(var k = 0; k < 7; k++)
-						{
-							if(tryAddCoin(sandbox, color, k))
-							{
-								var winner = checkForWin(sandbox);
-								if(winner[0] == color)	//If the other player can win in one move, prioritize it
-								{
-										moveScores[i] += 49;
-								}
-								else for(var l = 0; l < 7; l++)
-								{
-									if(tryAddCoin(sandbox, getOtherColor(color), l))
-									{
-										var winner = checkForWin(sandbox);
-										if(winner[0] == getOtherColor(color))	//If the other player can win in one move, prioritize it
-										{
-												moveScores[i] -= 7*aiAggressiveness;
-										}
-										else for(var m = 0; m < 7; m++)
-										{
-											totalIterations++;
-											if(tryAddCoin(sandbox, color, m)) 
-											{
-												var winner = checkForWin(sandbox);
-												for(var windex = 0; windex < winner.length; winner++)
-												{
-													if(winner[windex] == color)
-													{
-														moveScores[i] += 1;
-													}
-													else if(winner[windex] == getOtherColor(color))
-													{
-														moveScores[i] -= 1*aiAggressiveness;
-													}
-												}
-												removeCoin(sandbox, m);
-											}
-										}
-										removeCoin(sandbox, l);
-									}
-								}
-								removeCoin(sandbox, k);
-							}
-						}
-						removeCoin(sandbox, j);
-					}
-				}
+				analyzeNextPotentialMove(i, 7, aiDepth, sandbox, color, color, totalIterations);
 				removeCoin(sandbox, i);
 			}
 		}
 		document.getElementById("aiout").innerHTML = moveScores + "<br />Total Iterations:" + totalIterations;
-		
+
 		var moveIndex = 0;
 		for(var i = 0; i < 7; i++)
 		{
@@ -478,7 +449,7 @@ function getAIMove(color)
 				indicesToPick.push(i);
 			}
 		}
-		
+
 		if(indicesToPick.length > 0)
 		{
 		  moveIndex = indicesToPick[parseInt(Math.random()*indicesToPick.length)];	//Pick one of the equal indices at random
