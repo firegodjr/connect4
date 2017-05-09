@@ -1,5 +1,8 @@
 var debug = false;
 
+var AI_ANSWER_HEAD = "aimv;"
+var AI_DEBUG_HEAD = "aidbg;"
+
 var isGameOver = false;
 var isBlueTurn = false;
 var isRedTurn = false;
@@ -139,10 +142,10 @@ function handleClick(col)
 			document.getElementById((row+1) + "," + col).style.backgroundColor = getClr(BLUE);
 			document.getElementById((row+1) + "," + col).style.animation = "fall" + row + " 1s";
 			isBlueTurn = false;
-			renderBoard(board);
 			declareWinner(checkForWin(board)[0]);
 			if(useRedAI) document.getElementById("aiout").innerHTML = "The AI is thinking...";
-			setTimeout(setupRedTurn, 100);
+			setupTurn(RED);
+			renderBoard(board);
 		}
 	}
 	else if(isRedTurn)
@@ -153,10 +156,10 @@ function handleClick(col)
 			document.getElementById((row+1) + "," + col).style.backgroundColor = getClr(RED);
 			document.getElementById((row+1) + "," + col).style.animation = "fall" + row + " 1s";
 			isRedTurn = false;
-			renderBoard(board);
 			declareWinner(checkForWin(board)[0]);
 			if(useBlueAI) document.getElementById("aiout").innerHTML = "The AI is thinking...";
-			setTimeout(setupBlueTurn, 100);
+			setupTurn(BLUE);
+			renderBoard(board);
 		}
 	}
 }
@@ -167,19 +170,6 @@ function getNextOpenSlot(sandbox, col)
 	for(var i = 5; i >= 0; i--)
 	{
 		if(sandbox[col][i] == BLANK)
-		{
-			return i;
-		}
-	}
-	return -1;
-}
-
-/* Iterates through the column and finds the highest filled slot. If there isn't one, returns -1 */
-function getHighestCoin(sandbox, col)
-{
-	for(var i = 0; i < 6; i++)
-	{
-		if(sandbox[col][i] != BLANK)
 		{
 			return i;
 		}
@@ -203,19 +193,8 @@ function tryAddCoin(sandbox, player, col)
 	}
 }
 
-/* Removes the top coin in the column */
-function removeCoin(sandbox, col)
-{
-	var row = getHighestCoin(sandbox, col);
-
-	if(row != -1)
-	{
-		sandbox[col][row] = BLANK;
-	}
-}
-
 /* Sets up the elements for the Blue player's turn. */
-function setupBlueTurn()
+function setupTurn(color)
 {
 	var i;
 	if(!isGameOver)
@@ -223,52 +202,24 @@ function setupBlueTurn()
 		for(i = 0; i < 7; i++)
 		{
 			var el = document.getElementById("col" + i);
-			el.innerHTML="<img src='pics/downarrowblue.png' width='43' height='43' />";
+			el.innerHTML="<img src='pics/downarrow" + getClr(color) + ".png' width='43' height='43' />";
 		}
 	}
+
+	if(color == RED)
+	{
+		isRedTurn = true;
+	}
 	else
 	{
-		var el = document.getElementById("btntbl");
+		isBlueTurn = true;
 	}
 
-	isBlueTurn = true;
-	if(useBlueAI)
+	if((color == BLUE && useBlueAI) || (color == RED && useRedAI))
 	{
 		document.getElementById("aiout").innerHTML = "The AI is thinking...";
-		getAIMove(BLUE);
-	}
-	else
-	{
-		renderBoard(board);
-	}
-}
-
-/* Sets up the elements for the Blue player's turn. */
-function setupRedTurn()
-{
-	var i;
-	if(!isGameOver)
-	{
-		for(i = 0; i < 7; i++)
-		{
-			var el = document.getElementById("col" + i);
-			el.innerHTML="<img src='pics/downarrowred.png' width='43' height='43' />";
-		}
-	}
-	else
-	{
-		var el = document.getElementById("btntbl");
-	}
-
-	isRedTurn = true;
-	if(useRedAI)
-	{
-		document.getElementById("aiout").innerHTML = "The AI is thinking...";
-		getAIMove(RED);
-	}
-	else
-	{
-		renderBoard(board);
+		aiw.postMessage("brd" + JSON.stringify(board));
+		aiw.postMessage("mov" + color);
 	}
 }
 
@@ -333,18 +284,22 @@ function declareWinner(team)
 		if(team == BLUE)
 		{
 			el.innerHTML = "<tr><td>BLUE WINS</td></tr>";
-			isGameOver = true;
 		}
 		else if(team == RED)
 		{
 			el.innerHTML = "<tr><td>RED WINS</td></tr>";
-			isGameOver = true;
 		}
 		else
 		{
 			el.innerHTML = "<tr><td>GAME OVER</td></tr>";
-			isGameOver = true;
 		}
+
+		if(aim !== "undefined")
+		{
+			aim.postMessage("go" + isGameOver);
+		}
+
+		isGameOver = true;
 	}
 }
 
@@ -358,119 +313,40 @@ function changeThemeByNumber(num)
 	renderBoard(board);
 }
 
-function getOtherColor(color)
+/* Creates a WebWorker which finds and returns a new AI move */
+var aiw;
+function startAIWorker()
 {
-	if(color == RED)
-		return BLUE;
-	else return RED;
-}
-
-function analyzeNextPotentialMove(rootindex, loopamnt, depth, sandbox, basecolor, color, totalIterations)
-{
-		var winner = checkForWin(sandbox);
-		if(winner[0] == basecolor)						//If it can win in one move, prioritize it
-		{ //Just add the score as if it checked every time
-			moveScores[rootindex] += Math.pow(loopamnt, depth);
-			return;
-		}
-		else if(winner[0] == getOtherColor(basecolor))
-		{
-			moveScores[rootindex] -= Math.pow(loopamnt, depth);
-			return;
-		}
-
-	if(depth > 0)
+	if(typeof(Worker !== "undefined"))
 	{
-		for(var i = 0; i < loopamnt; ++i)
+		if(typeof(aiw) == "undefined")
 		{
-			if(tryAddCoin(sandbox, getOtherColor(color), i))
+			aiw = new Worker("scripts/worker.js");
+		}
+
+		aiw.postMessage("aim" + aiDepth);
+
+		aiw.onmessage = function(e)
+		{
+			var message = e.data;
+			if(message.startsWith("dbg"))
 			{
-				if(debug) renderBoard(sandbox);
-				analyzeNextPotentialMove(rootindex, loopamnt, depth-1, sandbox, basecolor, getOtherColor(color), totalIterations);
-				removeCoin(sandbox, i);
+				document.getElementById("aiout").innerHTML = message.replace("dbg", "");
 			}
-		}
-	}
-	else
-	{
-		++totalIterations;
-	}
-}
-
-//Performs a minimax function to get the move with the minimum amount of losses
-var moveScores = new Array(7);
-var sandbox = new Array(10);
-function getAIMove(color)
-{
-	if(!isGameOver)
-	{
-		moveScores = new Array(7);
-		for(var i = 0; i < 7; i++)
-		{
-			moveScores[i] = 0;
-		}
-
-		resetSandbox(sandbox);
-
-		var totalIterations = 0;
-		for(var i = 0; i < 7; i++)
-		{
-			if(tryAddCoin(sandbox, color, i))
+			else if(message.startsWith("mov"))
 			{
-				analyzeNextPotentialMove(i, 7, aiDepth, sandbox, color, color, totalIterations);
-				removeCoin(sandbox, i);
-			}
-		}
-		document.getElementById("aiout").innerHTML = moveScores + "<br />Total Iterations:" + totalIterations;
-
-		var moveIndex = 0;
-		for(var i = 0; i < 7; i++)
-		{
-			if(getNextOpenSlot(board, i) != -1)
-			{
-				moveIndex = i;
-			}
-		}
-		var highest = moveScores[moveIndex];
-		var indicesToPick = new Array(0);
-		for(var i = 0; i < moveScores.length; i++)
-		{
-			if(moveScores[i] > highest)
-			{
-				if(getNextOpenSlot(board, i) != -1)
-				{
-					highest = moveScores[i];
-					moveIndex = i;
-					indicesToPick = [];
-				}
-			}
-			if(moveScores[i] == highest)
-			{
-				indicesToPick.push(i);
-			}
-		}
-
-		if(indicesToPick.length > 0)
-		{
-		  moveIndex = indicesToPick[parseInt(Math.random()*indicesToPick.length)];	//Pick one of the equal indices at random
-		}
-		handleClick(moveIndex);
-	}
-
-
-	//Resets the AI sandbox to the board's current state
-	function resetSandbox(sandbox)
-	{
-		for(var i = 0; i < 10; i++)
-		{
-			sandbox[i] = new Array(9);
-			for(var j = 0; j < 9; j++)
-			{
-				sandbox[i][j] = board[i][j];
+				handleClick(parseInt(message.replace("mov", "")));
 			}
 		}
 	}
 }
+
+function stopAIWorker()
+{
+	aiw.terminate();
+	aiw = undefined;
+}
+
 
 function resetGame()
 {
@@ -485,5 +361,5 @@ function resetGame()
 	}
 	isGameOver = false;
 	document.getElementById("btntbl").innerHTML = '<tr><td id="col0" onclick="handleClick(0);"></td><td id="col1" onclick="handleClick(1);"></td><td id="col2" onclick="handleClick(2);"></td><td id="col3" onclick="handleClick(3);"></td><td id="col4" onclick="handleClick(4);"></td><td id="col5" onclick="handleClick(5);"></td><td id="col6" onclick="handleClick(6);"></td><td id="col7" onclick="handleClick(7);"></td></tr>'
-	setupBlueTurn();
+	setupTurn(BLUE);
 }

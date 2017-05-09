@@ -363,20 +363,21 @@
 	<div id="config">
 		<input type="button" id="themebtn" value="Themes" onClick='changeThemeByNumber(prompt("Please choose a theme by entering a number.\n0: Classic\n1: DOGE\n2: Christmas\n3: Challenge (TRYHARDS ONLY)"))'/>
 		<input type="button" id="resetbtn" value="Reset Game" onClick="resetGame()"><br /><br />
-		Use Blue AI: <input type="checkbox" onclick="useBlueAI = this.checked"/><br />
-		Use Red AI: <input type="checkbox" onclick="useRedAI = this.checked"/><br />
-		AI Intelligence: <input type="number" id="aivalue" value="5" onchange="aiDepth = this.value-1"><br />
+		Use Blue AI: <input type="checkbox" onclick="startAIWorker(); useBlueAI = this.checked"/><br />
+		Use Red AI: <input type="checkbox" onclick="startAIWorker(); useRedAI = this.checked"/><br />
+		AI Intelligence: <input type="number" id="aivalue" value="5" onchange="startAIWorker(); aiDepth = this.value-1; aiw.postMessage('aim' + aiDepth)"><br />
 		<p id="aiout"></p>
 	</div>
 	<script>
 		if(parseInt(Math.random() > 0.5))
 		{
-			setupRedTurn();
+			setupTurn(RED);
 		}
 		else
 		{
-			setupBlueTurn();
+			setupTurn(BLUE);
 		}
+		renderBoard(board);
 	</script>
 </body>
 </html>
