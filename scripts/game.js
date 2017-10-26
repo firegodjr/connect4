@@ -33,6 +33,42 @@ for(var i = 0; i < 10; i++)
 	}
 }
 
+function setupBoard()
+{
+	for(var i = 0; i < 6; ++i)
+	{
+		for(var j = 0; j < 7; ++j)
+		{
+			var el = document.getElementById(i + "," + j);
+			console.log(i + "," + j);
+			switch(j)
+			{
+				case 0:
+					el.addEventListener("click", () => {handleClick(0)});
+					break;
+				case 1:
+					el.addEventListener("click", () => {handleClick(1)});
+					break;
+				case 2:
+					el.addEventListener("click", () => {handleClick(2)});
+					break;
+				case 3:
+					el.addEventListener("click", () => {handleClick(3)});
+					break;
+				case 4:
+					el.addEventListener("click", () => {handleClick(4)});
+					break;
+				case 5:
+					el.addEventListener("click", () => {handleClick(5)});
+					break;
+				case 6:
+					el.addEventListener("click", () => {handleClick(6)});
+					break;
+			}
+		}
+	}
+}
+
 /* Assign background colors and other css elements to each
 game element based on theme */
 function renderBoard(board)
